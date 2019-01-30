@@ -17,7 +17,9 @@
                 $.post("{{ path('add_cart_json') }}", {
                     product_id: {{ product.id }},
                     quantity: 1
-                } );
+                } ).done(function(data) {
+                    $('.header-icons-noti').html($('.header-cart-wrapitem li').length+1);
+                });
             })
         })
     </script>
