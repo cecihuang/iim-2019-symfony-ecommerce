@@ -3,6 +3,10 @@
 {% block title %}Hello ProductController!{% endblock %}
 
 {% block body %}
+    <h1>{{ product.name }}</h1>
+    <img src="{{ product.pictureUrl }}" style="width:300px;">
+    <p>price : {{ product.price }}</p>
+    <p>Only {{ product.stock }} left !</p>
     <button id="add-to-cart">Add to cart</button>
 {% endblock %}
 
