@@ -16,10 +16,30 @@ class CartController extends AbstractController
     /**
      * @Route("/cart", name="cart", methods={"GET"})
      */
-    public function cart()
+    public function cart(SessionInterface $session)
     {
+        $repositoryP = $this->getDoctrine()->getRepository(Product::class);
+
+        $objectManager = $this->getDoctrine()->getManager();
+
+                $cartId = $session->get('cart');
+
+                if (!$cartId) {
+                    $cart = new Cart();
+
+                    $objectManager->persist($cart);
+                    $objectManager->flush();
+
+                    $session->set('cart', $cartId = $cart->getId());
+                } else {
+                    $repositoryCart = $this->getDoctrine()->getRepository(Cart::class);
+                    /** @var Cart $cart */
+                    $cart = $repositoryCart->find($cartId);
+                }
+
+
         return $this->render('cart/index.html.twig', [
-            'controller_name' => 'CartController',
+            'cart' => $cart,
         ]);
     }
 
@@ -70,14 +90,22 @@ class CartController extends AbstractController
                     /** @var Cart $cart */
                     $cart = $repositoryCart->find($cartId);
                 }
+                if(!empty($cart->getCartProducts())){
+                    foreach($cart->getCartProducts() as $productOfCart){
+                        if($productOfCart->getProduct()->getId() == $product){
+                            $productOfCart->setQuantity($productOfCart->getQuantity()+1);
+                        }
+                    }
+                }
+                else{
+                    $cartProduct = new CartProduct();
+                    $cartProduct->setCart($cart);
+                    $cartProduct->setProduct($product);
+                    $cartProduct->setQuantity((int)$request->request->get('quantity'));
 
-                $cartProduct = new CartProduct();
-                $cartProduct->setCart($cart);
-                $cartProduct->setProduct($product);
-                $cartProduct->setQuantity((int)$request->request->get('quantity'));
-
-                $objectManager->persist($cartProduct);
-                $objectManager->flush();
+                    $objectManager->persist($cartProduct);
+                    $objectManager->flush();
+                }
 
                 $status  = 'ok';
                 $message = 'Added to cart';
