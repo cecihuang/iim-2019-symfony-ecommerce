@@ -131,15 +131,15 @@
                     product_id: product,
                     quantity: 1
                 } ).done(function(data) {
-                    console.log(data);
-                    $('').html(data['page']);
+                    console.log(data['page']);
+                    $('.container-menu-header  .header-cart.header-dropdown').html(data['page']);
                     let nb=0;
                     for(let i= 0;i<$('.container-menu-header .header-cart-item-info').length;i++ ){
                         let recup = $('.container-menu-header .header-cart-item-info')[i].innerText.split(" x ");
                         nb += parseInt(recup[0])
                     }
-                    $('.container-menu-header .header-icons-noti').html(nb+1);
-                    $('.wrap_header_mobile .header-icons-noti').html(nb+1);
+                    $('.container-menu-header .header-icons-noti').html(nb);
+                    $('.wrap_header_mobile .header-icons-noti').html(nb);
                 });
             })
         })
