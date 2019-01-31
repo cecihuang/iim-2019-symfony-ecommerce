@@ -90,31 +90,33 @@ class CartController extends AbstractController
                     /** @var Cart $cart */
                     $cart = $repositoryCart->find($cartId);
                 }
-                if(!empty($cart->getCartProducts())){
-                    foreach($cart->getCartProducts() as $productOfCart){
-                        if($productOfCart->getProduct()->getId() == $product){
-                            $productOfCart->setQuantity($productOfCart->getQuantity()+1);
-                        }
+                foreach($cart->getCartProducts() as $cartProduct){
+                    if($cartProduct->getProduct()->getId() == $product->getId()){
+                        $cartProduct->setQuantity($cartProduct->getQuantity()+1);
+                        $status  = 'ok';
+                        $message = 'Added to cart';
+                        $objectManager->persist($cart);
+                        $objectManager->flush();
+                        exit();
                     }
                 }
-                else{
-                    $cartProduct = new CartProduct();
-                    $cartProduct->setCart($cart);
-                    $cartProduct->setProduct($product);
-                    $cartProduct->setQuantity((int)$request->request->get('quantity'));
+                $cartProduct = new CartProduct();
+                $cartProduct->setCart($cart);
+                $cartProduct->setProduct($product);
+                $cartProduct->setQuantity((int)$request->request->get('quantity'));
 
-                    $objectManager->persist($cartProduct);
-                    $objectManager->flush();
-                }
+                $objectManager->persist($cartProduct);
+                $objectManager->flush();
 
                 $status  = 'ok';
                 $message = 'Added to cart';
+
             }
         }
 
         return new JsonResponse([
-            'result'  => $status,
-            'message' => $message,
+            'result'    => $status,
+            'message'   => $message,
         ]);
     }
 

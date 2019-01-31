@@ -188,7 +188,12 @@
 
 <script type="text/javascript">
     $(document).ready(function(){
-        $('.header-icons-noti').html($('.header-cart-wrapitem li').length);
-        console.log($('.header-cart-wrapitem li'))
+        let nb=0;
+        for(let i= 0;i<$('.container-menu-header .header-cart-item-info').length;i++ ){
+            let recup = $('.container-menu-header .header-cart-item-info')[i].innerText.split(" x ");
+            nb += parseInt(recup[0])
+        }
+        $('.container-menu-header .header-icons-noti').html(nb);
+        $('.wrap_header_mobile .header-icons-noti').html(nb);
     });
 </script>
