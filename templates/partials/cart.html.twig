@@ -1,29 +1,36 @@
-<!-- Header cart noti -->
 <div class="header-cart header-dropdown">
     <ul class="header-cart-wrapitem">
 
-        {% for cartProduct in cart.cartProducts %}
-            {% set product = cartProduct.product %}
-            <li class="header-cart-item">
-                <div class="header-cart-item-img">
-                    <img src="{{ product.pictureUrl }}" alt="IMG">
-                </div>
+        {% if cart is defined and cart is not null %}
+            {%for cartProduct in cart.cartProducts %}
+                {% set product = cartProduct.product %}
+                <li class="header-cart-item">
+                    <div class="header-cart-item-img">
+                        <img src="{{ product.pictureUrl }}" alt="IMG">
+                    </div>
 
-                <div class="header-cart-item-txt">
-                    <a href="#" class="header-cart-item-name">
-                        {{ product.name }}
-                    </a>
+                    <div class="header-cart-item-txt">
+                        <a href="#" class="header-cart-item-name">
+                            {{ product.name }}
+                        </a>
 
-                    <span class="header-cart-item-info">
-                    {{ cartProduct.quantity  }} x {{ price_format(product.price) }}
-                </span>
-                </div>
-            </li>
-        {% endfor %}
+                        <span class="header-cart-item-info">
+                        {{ cartProduct.quantity  }} x {{ price_format(product.price) }}
+                    </span>
+                    </div>
+                </li>
+            {% endfor %}
+        {% endif %}
     </ul>
 
     <div class="header-cart-total">
-        Total: {{ cart.total }}€
+        Total:
+        {% if cart is defined and cart is not null %}
+        {{ cart.total }}€
+        {% else %}
+        0€
+        {% endif %}
+
     </div>
 
     <div class="header-cart-buttons">

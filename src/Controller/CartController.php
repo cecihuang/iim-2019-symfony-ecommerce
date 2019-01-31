@@ -97,7 +97,11 @@ class CartController extends AbstractController
                         $message = 'Added to cart';
                         $objectManager->persist($cart);
                         $objectManager->flush();
-                        exit();
+                        return new JsonResponse([
+                            'result'    => $status,
+                            'message'   => $message,
+                            'page'      => $this->render('partials/cart.html.twig',['cart'=>$cart])->getContent()
+                        ]);
                     }
                 }
                 $cartProduct = new CartProduct();
@@ -113,10 +117,10 @@ class CartController extends AbstractController
 
             }
         }
-
         return new JsonResponse([
             'result'    => $status,
             'message'   => $message,
+            'page'      => $this->render('partials/cart.html.twig',['cart'=>$cart])->getContent()
         ]);
     }
 

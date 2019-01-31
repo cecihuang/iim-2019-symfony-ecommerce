@@ -17,7 +17,7 @@
                 $.post("{{ path('add_cart_json') }}", {
                     product_id: {{ product.id }},
                     quantity: 1
-                } ).done(function(data) {
+                } ).done(function() {
                     let nb=0;
                     for(let i= 0;i<$('.container-menu-header .header-cart-item-info').length;i++ ){
                         let recup = $('.container-menu-header .header-cart-item-info')[i].innerText.split(" x ");
