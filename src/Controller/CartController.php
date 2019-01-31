@@ -120,6 +120,51 @@ class CartController extends AbstractController
         ]);
     }
 
+    /**
+     * @Route("/cart/delete.json", name="delete_cart_json", methods={"POST"})
+     */
+    public function deleteToCartJson(Request $request, SessionInterface $session)
+    {
+        $repositoryP = $this->getDoctrine()->getRepository(Product::class);
+        $product     = $repositoryP->find($request->request->get('product_id'));
+
+        $objectManager = $this->getDoctrine()->getManager();
+
+        if (!$product instanceof Product) {
+            $status  = 'ko';
+            $message = 'Product not found';
+        } else {
+            if ($product->getStock() < $request->request->get('quantity')) {
+                $status  = 'ko';
+                $message = 'Missing quantity for product';
+            } else {
+                $cartId = $session->get('cart');
+
+                if ($cartId) {
+                    $repositoryCart = $this->getDoctrine()->getRepository(Cart::class);
+                    $cart = $repositoryCart->find($cartId);
+                    $cart->removeCartProduct($product);
+                } else {
+                    $status  = 'ko';
+                    $message = 'Error, we couldn\'t delete the product from the cart.';
+                    return new JsonResponse([
+                        'result'    => $status,
+                        'message'   => $message,
+                    ]);
+                }
+
+                $status  = 'ok';
+                $message = 'Successfuly deleted';
+
+            }
+        }
+        return new JsonResponse([
+            'result'    => $status,
+            'message'   => $message,
+        ]);
+
+    }
+
     public function partial(SessionInterface $session)
     {
         $cartId = $session->get('cart');
