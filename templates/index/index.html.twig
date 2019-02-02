@@ -131,7 +131,6 @@
                     product_id: product,
                     quantity: 1
                 } ).done(function(data) {
-                    console.log(data['page']);
                     $('.container-menu-header  .header-cart.header-dropdown').html(data['page']);
                     let nb=0;
                     for(let i= 0;i<$('.container-menu-header .header-cart-item-info').length;i++ ){

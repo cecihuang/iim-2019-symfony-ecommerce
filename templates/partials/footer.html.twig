@@ -195,5 +195,21 @@
         }
         $('.container-menu-header .header-icons-noti').html(nb);
         $('.wrap_header_mobile .header-icons-noti').html(nb);
+
+        $('.header-cart-item-img').on('click', function(){
+            let product =parseInt($(this).data('product'));
+            $.post("{{ path('delete_cart_json') }}", {
+                product_id: product
+            } ).done(function(data) {
+                $('.container-menu-header  .header-cart.header-dropdown').html(data['page']);
+                let nb=0;
+                for(let i= 0;i<$('.container-menu-header .header-cart-item-info').length;i++ ){
+                    let recup = $('.container-menu-header .header-cart-item-info')[i].innerText.split(" x ");
+                    nb += parseInt(recup[0])
+                }
+                $('.container-menu-header .header-icons-noti').html(nb);
+                $('.wrap_header_mobile .header-icons-noti').html(nb);
+            });
+        })
     });
 </script>

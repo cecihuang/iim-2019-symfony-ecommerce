@@ -80,10 +80,8 @@ class CartController extends AbstractController
 
                 if (!$cartId) {
                     $cart = new Cart();
-
                     $objectManager->persist($cart);
                     $objectManager->flush();
-
                     $session->set('cart', $cartId = $cart->getId());
                 } else {
                     $repositoryCart = $this->getDoctrine()->getRepository(Cart::class);
@@ -96,6 +94,7 @@ class CartController extends AbstractController
                         $status  = 'ok';
                         $message = 'Added to cart';
                         $objectManager->persist($cart);
+                        $objectManager->persist($cartProduct);
                         $objectManager->flush();
                         $page = $this->render('partials/cart.html.twig',['cart'=>$cart])->getContent();
                         return new JsonResponse([
@@ -109,13 +108,12 @@ class CartController extends AbstractController
                 $cartProduct->setCart($cart);
                 $cartProduct->setProduct($product);
                 $cartProduct->setQuantity((int)$request->request->get('quantity'));
-
-                $objectManager->persist($cartProduct);
-                $objectManager->persist($cart);
-                $objectManager->flush();
-
                 $status  = 'ok';
                 $message = 'Added to cart';
+                $cart->addCartProduct($cartProduct);
+                $objectManager->persist($cart);
+                $objectManager->persist($cartProduct);
+                $objectManager->flush();
                 $page = $this->render('partials/cart.html.twig',['cart'=>$cart])->getContent();
                 return new JsonResponse([
                     'result'    => $status,
@@ -145,29 +143,36 @@ class CartController extends AbstractController
             $status  = 'ko';
             $message = 'Product not found';
         } else {
-            if ($product->getStock() < $request->request->get('quantity')) {
-                $status  = 'ko';
-                $message = 'Missing quantity for product';
+            $cartId = $session->get('cart');
+
+            if ($cartId) {
+                $repositoryCart = $this->getDoctrine()->getRepository(Cart::class);
+                $cart = $repositoryCart->find($cartId);
+                $repositoryCartProduct = $this->getDoctrine()->getRepository(CartProduct::class);
+                $cartProduct = $repositoryCartProduct->findOneBy(['product'=>$product]);
+
+                $cart->removeCartProduct($cartProduct);
             } else {
-                $cartId = $session->get('cart');
-
-                if ($cartId) {
-                    $repositoryCart = $this->getDoctrine()->getRepository(Cart::class);
-                    $cart = $repositoryCart->find($cartId);
-                    $cart->removeCartProduct($product);
-                } else {
-                    $status  = 'ko';
-                    $message = 'Error, we couldn\'t delete the product from the cart.';
-                    return new JsonResponse([
-                        'result'    => $status,
-                        'message'   => $message,
-                    ]);
-                }
-
-                $status  = 'ok';
-                $message = 'Successfuly deleted';
-
+                $status  = 'ko';
+                $message = 'Error, we couldn\'t delete the product from the cart.';
+                return new JsonResponse([
+                    'result'    => $status,
+                    'message'   => $message,
+                ]);
             }
+
+            $status  = 'ok';
+            $message = 'Successfuly deleted';
+            $objectManager->persist($cart);
+            $objectManager->flush();
+            $page = $this->render('partials/cart.html.twig',['cart'=>$cart])->getContent();
+
+            return new JsonResponse([
+                'result'    => $status,
+                'message'   => $message,
+                'page'      => substr($page,42,strlen($page)-6)
+            ]);
+
         }
         return new JsonResponse([
             'result'    => $status,

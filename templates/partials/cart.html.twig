@@ -5,7 +5,7 @@
             {%for cartProduct in cart.cartProducts %}
                 {% set product = cartProduct.product %}
                 <li class="header-cart-item">
-                    <div class="header-cart-item-img">
+                    <div class="header-cart-item-img" data-product="{{ product.id }}">
                         <img src="{{ product.pictureUrl }}" alt="IMG">
                     </div>
 
