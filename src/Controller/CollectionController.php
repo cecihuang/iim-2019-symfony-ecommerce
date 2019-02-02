@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\Collection;
+use App\Entity\Product;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Routing\Annotation\Route;
 
@@ -31,8 +32,14 @@ class CollectionController extends AbstractController
 
         /** @var Collection $collection */
         $collection =  $repositoryCollection->findOneBy(['id'=>$slug]);
+
+
+        $repositoryProduct = $this->getDoctrine()->getRepository(Product::class);
+        /** @var Product $product */
+        $product =  $repositoryProduct->findBy(['collection'=>$slug]);
         return $this->render('collection/collection.html.twig', [
-            'collection' => $collection,
+            'products' => $product,
+            'collection' => $collection
         ]);
     }
 

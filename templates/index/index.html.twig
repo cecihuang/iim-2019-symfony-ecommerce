@@ -85,26 +85,3 @@
 </section>
 
 {% endblock body %}
-
-{% block javascripts %}
-    <script type="text/javascript">
-        $(document).ready(function(){
-            $('.add_to_cart').on('click', function(){
-                let product =parseInt($(this).val());
-                $.post("{{ path('add_cart_json') }}", {
-                    product_id: product,
-                    quantity: 1
-                } ).done(function(data) {
-                    $('.container-menu-header  .header-cart.header-dropdown').html(data['page']);
-                    let nb=0;
-                    for(let i= 0;i<$('.container-menu-header .header-cart-item-info').length;i++ ){
-                        let recup = $('.container-menu-header .header-cart-item-info')[i].innerText.split(" x ");
-                        nb += parseInt(recup[0])
-                    }
-                    $('.container-menu-header .header-icons-noti').html(nb);
-                    $('.wrap_header_mobile .header-icons-noti').html(nb);
-                });
-            })
-        })
-    </script>
-{% endblock %}

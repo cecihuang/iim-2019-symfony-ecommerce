@@ -3,23 +3,25 @@
 {% block title %}Hello CollectionController!{% endblock %}
 
 {% block body %}
-    <div class="col-sm-10 col-md-8 col-lg-6 m-l-r-auto p-t-15 p-b-15">
-        <div class="hov-img-zoom pos-relative">
-            <img src="https://via.placeholder.com/720x539" alt="IMG-BANNER">
-
-            <div class="ab-t-l sizefull flex-col-c-m p-l-15 p-r-15">
-                        <span class="m-text9 p-t-45 fs-20-sm">
-                            The Beauty
-                        </span>
-
-                <h3 class="l-text1 fs-35-sm">
-                    Lookbook
+    <section class="newproduct bgwhite p-t-45 p-b-105">
+        <div class="container">
+            <div class="sec-title p-b-60">
+                <h3 class="m-text5 t-center">
+                    {{ collection.name }}
                 </h3>
-
-                <a href="#" class="s-text4 hov2 p-t-20 ">
-                    View Collection
-                </a>
             </div>
+
+            <!-- Slide2 -->
+            <div class="col-12">
+                <div class="row">
+
+                    {% for product in products %}
+                        {% include 'collection/partials/product.html.twig' %}
+                    {% endfor %}
+
+                </div>
+            </div>
+
         </div>
-    </div>
+    </section>
 {% endblock %}
