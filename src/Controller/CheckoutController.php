@@ -35,7 +35,6 @@ class CheckoutController extends AbstractController
             $cartId = $session->get('cart');
             $repositoryCart = $this->getDoctrine()->getRepository(Cart::class);
             $cart = $repositoryCart->find($cartId);
-            $repositoryCartProducts = $this->getDoctrine()->getRepository(CartProduct::class);
             foreach($cart->getCartProducts() as $cartProduct){
                 $orderProduct = new OrderProduct();
                 $orderProduct->setProductId($cartProduct->getProduct()->getId());
@@ -48,12 +47,21 @@ class CheckoutController extends AbstractController
                 $objectManager->flush();
 
             }
-            //header('Location:index');
+            return $this->redirect( $this->generateUrl('payment_ok'));
+
         }
 
         return $this->render('checkout/payment.html.twig', [
             'card' => $card,
             'form' => $form->createView(),
+        ]);
+    }
+    /**
+     * @Route("/payment_ok", name="payment_ok", methods={"GET","POST"})
+     */
+    public function payment_ok()
+    {
+        return $this->render('checkout/payment_ok.html.twig', [
         ]);
     }
 }

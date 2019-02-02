@@ -18,11 +18,9 @@
                         </li>
 
                         <li>
-                            <a href="#">Collections</a>
+                            <a href="{{ path('collections') }}">Collections</a>
                             <ul class="sub_menu">
-                                <li><a href="#">Collection 1</a></li>
-                                <li><a href="#">Collection 2</a></li>
-                                <li><a href="#">Collection 3</a></li>
+                                {{ render(controller('App\\Controller\\CollectionController::partial')) }}
                             </ul>
                         </li>
 
@@ -90,15 +88,13 @@
             <ul class="main-menu">
 
                 <li class="item-menu-mobile">
-                    <a href="#">Home</a>
+                    <a href="{{ path('index') }}">Home</a>
                 </li>
 
                 <li class="item-menu-mobile">
-                    <a href="#">Collection</a>
+                    <a href="{{ path('collections') }}">Collection</a>
                     <ul class="sub-menu">
-                        <li><a href="#">Collection 1</a></li>
-                        <li><a href="#">Collection 2</a></li>
-                        <li><a href="#">Collection 3</a></li>
+                        {{ render(controller('App\\Controller\\CartController::partial')) }}
                     </ul>
                     <i class="arrow-main-menu fa fa-angle-right" aria-hidden="true"></i>
                 </li>
